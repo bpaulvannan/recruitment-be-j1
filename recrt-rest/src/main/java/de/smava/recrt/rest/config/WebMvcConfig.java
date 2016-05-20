@@ -27,7 +27,7 @@ import java.util.Collections;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({"de.smava.recrt.rest"})
+@ComponentScan({"de.smava.recrt.rest","de.smava.recrt.jms"})
 @PropertySource("classpath:recrt.properties")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 

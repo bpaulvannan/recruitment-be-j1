@@ -3,7 +3,9 @@ package de.smava.recrt.rest;
 import de.smava.recrt.exception.RecrtServiceException;
 import de.smava.recrt.model.AppUser;
 import de.smava.recrt.model.BankAccount;
+import de.smava.recrt.persistence.model.BankAccountEntity;
 import de.smava.recrt.rest.model.AppUserResource;
+import de.smava.recrt.rest.model.BankAccountResource;
 import de.smava.recrt.service.AppUserService;
 import de.smava.recrt.service.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +54,16 @@ public class AppUserApi {
 
     @Secured({"ROLE_ADMIN"})
     @RequestMapping(method = RequestMethod.GET, value="/{userName}/accounts")
-    public List<? extends BankAccount> getUserAccounts(@PathVariable String userName) throws RecrtServiceException {
-        return bankAccountService.getByAppUser(userName);
+    public List<BankAccountResource> getUserAccounts(@PathVariable String userName) throws RecrtServiceException {
+        List<? extends BankAccount> bankAccountEntityList = bankAccountService.getByAppUser(userName);
+        if(bankAccountEntityList != null && bankAccountEntityList.size() > 0){
+            List<BankAccountResource> result = new ArrayList<>(bankAccountEntityList.size());
+            for(BankAccount entity : bankAccountEntityList){
+                result.add(new BankAccountResource(entity));
+            }
+            return result;
+        }
+        return null;
     }
 
 }

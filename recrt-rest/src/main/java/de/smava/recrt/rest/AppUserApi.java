@@ -2,11 +2,14 @@ package de.smava.recrt.rest;
 
 import de.smava.recrt.exception.RecrtServiceException;
 import de.smava.recrt.model.AppUser;
+import de.smava.recrt.model.BankAccount;
 import de.smava.recrt.rest.model.AppUserResource;
 import de.smava.recrt.service.AppUserService;
+import de.smava.recrt.service.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,10 @@ public class AppUserApi {
     @Autowired
     @Qualifier("appUserService")
     private AppUserService appUserService;
+
+    @Autowired
+    @Qualifier("bankAccountPersistenceService")
+    private BankAccountService bankAccountService;
 
     /*@InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -41,6 +48,12 @@ public class AppUserApi {
         }
 
         return result;
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @RequestMapping(method = RequestMethod.GET, value="/{userName}/accounts")
+    public List<? extends BankAccount> getUserAccounts(@PathVariable String userName) throws RecrtServiceException {
+        return bankAccountService.getByAppUser(userName);
     }
 
 }
